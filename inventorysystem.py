@@ -74,8 +74,7 @@ class start:
     
     def additem(self):
         try:
-            
-            conn.execute('''CREATE TABLE if not exists item (ItemNo INT NOT NULL, NAME  TEXT NOT NULL,Quantity int  NOT NULL,MRP INT NOT NULL,Rate INT NOT NULL);''')
+            conn.execute("CREATE TABLE if not exists item (ItemNo INT NOT NULL, NAME VARCHAR(20) NOT NULL, Quantity int NOT NULL, MRP INT NOT NULL, Rate INT NOT NULL)")
 
             itemNo=(input("Enter item no. "))           
             itemName=input("Enter item Name ")
@@ -89,16 +88,20 @@ class start:
                 conn.execute("""insert into item values (?,?,?,?,?)""",(itemobj.getitemno(),itemobj.getitemname(),itemobj.getitemQty(),itemobj.getitemmrp(),itemobj.getitemrate()))  
             else:
                 print("Invalid Input")
-                start.gotooptions(self)  
         except sqlite3.DatabaseError as e:
             print("Error details: ",e)
         finally:
             conn.commit()
+        start.gotooptions(self)  
         
     def viewitem(self):
-        cur.execute("select * from item")    
-        for n in cur.fetchall():
-            print(n) 
+        try:
+            cur.execute("select * from item")    
+            for n in cur.fetchall():
+                print(n) 
+            
+        except sqlite3.DatabaseError as e:
+            print("Error details: ",e)
         obj.gotooptions()
 
 
@@ -145,5 +148,3 @@ class start:
 obj=start()
 obj.initial()
 obj.gotooptions()
-
-
